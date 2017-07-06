@@ -3,6 +3,7 @@
 #include <Keypad.h>
 #include <SPI.h>
 #include <U8x8lib.h>
+#include "lcd_symbols.h"
 
 #include "vcc.h"
 #include <printf.h>
@@ -76,6 +77,7 @@ void loop(){
   
   uint8_t mykey = customKeypad.getKey();
   if (mykey){
+    lcd_set_yes(u8x8.getU8x8());
     Serial.println(mykey);
     u8x8.clearLine(1);
     u8x8.setCursor(0,1);

@@ -1,4 +1,4 @@
-  /// https://provideyourown.com/2012/secret-arduino-voltmeter-measure-battery-voltage/
+/// adapted from https://provideyourown.com/2012/secret-arduino-voltmeter-measure-battery-voltage/
 
 uint16_t readVcc() {
   // Read 1.1V reference against AVcc
