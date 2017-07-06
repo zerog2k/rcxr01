@@ -17,6 +17,14 @@ const uint8_t txaddr[] = { 0xAD, 0xAC, 0xAB, 0xAA, 0x00 };
 const uint8_t rxaddr[] = { 0xAD, 0xAC, 0xAB, 0xAA, 0x01 };
 uint8_t payload[32];
 
+/// LCD stuff
+
+#define CS 13 //PD5
+#define RST 14 //PD6
+#define RS 3 //PB3
+
+U8X8_ST7565_RCXR01_4W_HW_SPI u8x8(/* cs=*/ CS, /* dc=*/ RS, /* reset=*/ RST);
+
 /// keypad stuff
 const uint8_t ROWS = 5; //four rows
 const uint8_t COLS = 4; //four columns
@@ -34,14 +42,6 @@ byte colPins[COLS] = {29, 26, 11, 12}; //connect to the column pinouts of the ke
 
 //initialize an instance of class NewKeypad
 Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
-
-/// LCD stuff
-
-#define CS 13 //PD5
-#define RST 14 //PD6
-#define RS 3 //PB3
-
-U8X8_ST7565_RCXR01_4W_HW_SPI u8x8(/* cs=*/ CS, /* dc=*/ RS, /* reset=*/ RST);
 
 /// usb voltage detection stuff
 #define USB_DETECT_PIN  2   // PB2
@@ -61,7 +61,6 @@ void setup(){
 
   // radio
   radio.begin();
-  //radio.set  
   radio.openWritingPipe(txaddr);
   radio.openReadingPipe(1, rxaddr);
   radio.enableDynamicPayloads();
