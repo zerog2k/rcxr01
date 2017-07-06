@@ -1,3 +1,0 @@
-[submodule "U8g2_Arduino"]
-	path = arduino/U8g2_Arduino
-	url = git@github.com:zerog2k/U8g2_Arduino.git
