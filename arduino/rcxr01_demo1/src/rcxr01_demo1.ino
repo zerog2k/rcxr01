@@ -1,5 +1,6 @@
 // demo for RCXR-01
 
+#include <Arduino.h>
 #include <Keypad.h>
 #include <SPI.h>
 #include <U8x8lib.h>
