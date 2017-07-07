@@ -47,6 +47,26 @@
 // yes (check mark)
 #define SYM_YES     0x5e
 
+void lcd_set_no(u8x8_t * u8x8);
+void lcd_set_yes(u8x8_t * u8x8);
+void lcd_set_chan(uint8_t chan);
+
+void lcd_write(u8x8_t * u8x8, uint8_t addr, uint8_t data);
+
+
+
+void lcd_set_yes(u8x8_t * u8x8)
+{
+  lcd_write(u8x8, SYM_YES, 1);
+  lcd_write(u8x8, SYM_NO, 0);
+}
+
+void lcd_set_no(u8x8_t * u8x8)
+{
+  lcd_write(u8x8, SYM_NO, 1);
+  lcd_write(u8x8, SYM_YES, 0);
+}
+
 void lcd_write(u8x8_t * u8x8, uint8_t addr, uint8_t data)
 {
   //uint8_t buf[1];
@@ -58,12 +78,8 @@ void lcd_write(u8x8_t * u8x8, uint8_t addr, uint8_t data)
   u8x8_cad_SendData(u8x8, 1, &data); //not working fix ptr
   u8x8_cad_EndTransfer(u8x8);
 }
-void lcd_set_yes(u8x8_t * u8x8)
-{
-  lcd_write(u8x8, SYM_YES, 1);
-}
 
-void lcd_set_chan(uint8_t chan);
+
 
 
 

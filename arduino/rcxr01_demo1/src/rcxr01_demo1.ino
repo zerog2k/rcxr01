@@ -49,6 +49,9 @@ Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS
 #define USB_DETECT_PIN  2   // PB2
 uint8_t portb_state;
 
+
+uint8_t i;
+
 void setup(){
   Serial.begin(9600);
 
@@ -77,8 +80,12 @@ void setup(){
 void loop(){
   
   uint8_t mykey = customKeypad.getKey();
-  if (mykey){
-    lcd_set_yes(u8x8.getU8x8());
+  if (mykey) {
+    if (i%2==0) {
+          lcd_set_yes(u8x8.getU8x8());
+    } else {
+          lcd_set_no(u8x8.getU8x8());
+    }
     Serial.println(mykey);
     u8x8.clearLine(1);
     u8x8.setCursor(0,1);
@@ -102,6 +109,6 @@ void loop(){
   u8x8.setCursor(0,3);
   u8x8.print("vcc: ");
   u8x8.print(readVcc());
-  
+  i++;
   delay(200);
 }
