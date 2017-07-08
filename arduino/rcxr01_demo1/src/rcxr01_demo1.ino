@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include <Keypad.h>
 #include <SPI.h>
+#include <Wire.h>
 #include <U8x8lib.h>
 #include "lcd_symbols.h"
 
@@ -11,8 +12,8 @@
 #include "RF24.h"
 
 /// radio stuff
-#define   RF_CE   0  //PB0
-#define   RF_CSN  17 //PC1
+#define   RF_CE   4 //0  //PB0
+#define   RF_CSN  20 //17 //PC1
 
 RF24 radio(RF_CE, RF_CSN);
 const uint8_t txaddr[] = { 0xAD, 0xAC, 0xAB, 0xAA, 0x00 };
@@ -21,9 +22,9 @@ uint8_t payload[32];
 
 /// LCD stuff
 
-#define CS 13 //PD5
-#define RST 14 //PD6
-#define RS 3 //PB3
+#define CS 9//13 //PD5
+#define RST 8 //PD6
+#define RS 7 //PB3
 
 U8X8_ST7565_RCXR01_4W_HW_SPI u8x8(/* cs=*/ CS, /* dc=*/ RS, /* reset=*/ RST);
 
@@ -39,14 +40,16 @@ uint8_t hexaKeys[ROWS][COLS] = {
   {17, 18, 19, 20}
 };
 
-byte rowPins[ROWS] = {25, 27, 30, 31, 28}; //connect to the row pinouts of the keypad
-byte colPins[COLS] = {29, 26, 11, 12}; //connect to the column pinouts of the keypad
+//byte rowPins[ROWS] = {25, 27, 30, 31, 28}; //connect to the row pinouts of the keypad
+//byte colPins[COLS] = {29, 26, 11, 12}; //connect to the column pinouts of the keypad
+byte rowPins[ROWS] = {30, 28, 25, 24, 27}; //connect to the row pinouts of the keypad
+byte colPins[COLS] = {26, 29, 3, 22}; //connect to the column pinouts of the keypad
 
 //initialize an instance of class NewKeypad
 Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
 
 /// usb voltage detection stuff
-#define USB_DETECT_PIN  2   // PB2
+#define USB_DETECT_PIN  6 //2   // PB2
 uint8_t portb_state;
 
 
@@ -110,5 +113,5 @@ void loop(){
   u8x8.print("vcc: ");
   u8x8.print(readVcc());
   i++;
-  delay(200);
+  delay(100);
 }
