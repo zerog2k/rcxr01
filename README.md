@@ -4,28 +4,28 @@ Various documentation and example code for Turning Technologies ResponseCard XR 
 inspired by [Travis Goodspeed's most excellent reverse engineering](http://travisgoodspeed.blogspot.com/2010/07/reversing-rf-clicker.html) of older versions of these clickers.
 The RCXR-01 seems to be quite handy as a portable NRF24 platform (i.e. handheld control/monitoring). I hope that you will find lots of nice hacks
 ## hardware
- * ATmega 644PV mcu
-  * 64k flash, 4k ram, 2k eeprom
-  * internal RC 1MHz clock (CKDIV8 fuse set)
-  * 32khz crystal on TOSC1/2 (timer2 can be setup as rtc)
- * NRF24L01 radio
-  * on hardware spi bus (SCK/MISO/MOSI)
-  * CE -> PB0, CSN -> PC1
- * CAT25128 16KB SPI EEPROM
-  * CS -> SS (PB4)
-  * doesn't look like TT used the external eeprom for anything.
- * FTDI FT232R usb to uart
-  * TXD/RXD seem to be connected through some isolator? to mcu
-  * has custom PID: 0xdb14
-   * flashing to default ftdi PID: `sudo ./ft232r_prog --old-pid 0xdb14 --new-pid 0x6001` so serial port is setup on connect
-  * DTR/RTS not connected. May want to connect either these to mcu RST (top pad of D5) w/ in-line 1uF cap for auto-reset, i.e. for arduino bootloader
- * when usb power is present, PB2 is pulled low (via Q3)
- * testpoint pads under battery compartment (from left to right)
-  * MOSI, RST, SCK, MISO, GND, VDD3v3, SS, TCK, TMS, TDO, TDI
- * LCD panel
-  * 128x32 matrix plus several custom symbols. Probably ST7565 chipset.  
-  * U8x8 lib customized: U8X8_ST7565_RCXR01_4W_HW_SPI
-  * mcu connectivity: SPI for SCLK & SI. CS -> PD5, RST -> PD6, RS(A0) -> PB3
+* ATmega 644PV mcu
+ * 64k flash, 4k ram, 2k eeprom
+ * internal RC 1MHz clock (CKDIV8 fuse set)
+ * 32khz crystal on TOSC1/2 (timer2 can be setup as rtc)
+* NRF24L01 radio
+ * on hardware spi bus (SCK/MISO/MOSI)
+ * CE -> PB0, CSN -> PC1
+* CAT25128 16KB SPI EEPROM
+ * CS -> SS (PB4)
+ * doesn't look like TT used the external eeprom for anything.
+* FTDI FT232R usb to uart
+ * TXD/RXD seem to be connected through some isolator? to mcu
+ * has custom PID: 0xdb14
+  * flashing to default ftdi PID: `sudo ./ft232r_prog --old-pid 0xdb14 --new-pid 0x6001` so serial port is setup on connect
+ * DTR/RTS not connected. May want to connect either these to mcu RST (top pad of D5) w/ in-line 1uF cap for auto-reset, i.e. for arduino bootloader
+* when usb power is present, PB2 is pulled low (via Q3)
+* testpoint pads under battery compartment (from left to right)
+ * MOSI, RST, SCK, MISO, GND, VDD3v3, SS, TCK, TMS, TDO, TDI
+* LCD panel
+ * 128x32 matrix plus several custom symbols. Probably ST7565 chipset.  
+ * U8x8 lib customized: U8X8_ST7565_RCXR01_4W_HW_SPI
+ * mcu connectivity: SPI for SCLK & SI. CS -> PD5, RST -> PD6, RS(A0) -> PB3
 
 ### keypad matrix map
 |     |  PA5 |  PA2 |  PD3 |  PD4 |
@@ -56,10 +56,10 @@ The RCXR-01 seems to be quite handy as a portable NRF24 platform (i.e. handheld 
 
 ## images
 ### pcb front
-[pcb front](docs/rcxr_01_front_pcb.jpg)
+![pcb front](docs/rcxr_01_front_pcb.jpg)
 
 ### pcb rear
-[pcb rear](docs/rcxr_01_rear_pcb.jpg)
+![pcb rear](docs/rcxr_01_rear_pcb.jpg)
 
 ### working demo
-[working demo](docs/rcxr_01_demo.jpg)
+![working demo](docs/rcxr_01_demo.jpg)
