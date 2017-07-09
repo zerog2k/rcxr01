@@ -72,9 +72,9 @@ void lcd_write(u8x8_t * u8x8, uint8_t addr, uint8_t data)
   //uint8_t buf[1];
   //buf[0] = data;
   u8x8_cad_StartTransfer(u8x8);
+  u8x8_cad_SendCmd(u8x8, 0xb0 | PAGENUM);    
   u8x8_cad_SendCmd(u8x8, 0x10 | (addr >> 4));  
   u8x8_cad_SendCmd(u8x8, 0x00 | (addr & 0xF));
-  u8x8_cad_SendCmd(u8x8, 0xb0 | PAGENUM);  
   u8x8_cad_SendData(u8x8, 1, &data); //not working fix ptr
   u8x8_cad_EndTransfer(u8x8);
 }
