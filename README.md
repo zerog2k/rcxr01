@@ -10,36 +10,36 @@ This is not about reverse engineering the existing software, but rather reusing 
 
 ## hardware
 * ATmega 644PV mcu
- * 64k flash, 4k ram, 2k eeprom
- * internal RC 1MHz clock (CKDIV8 fuse set)
- * 32khz crystal on TOSC1/2 (timer2 can be setup as rtc)
+  * 64k flash, 4k ram, 2k eeprom
+  * internal RC 1MHz clock (CKDIV8 fuse set)
+  * 32khz crystal on TOSC1/2 (timer2 can be setup as rtc)
 * NRF24L01 radio
- * on hardware spi bus (SCK/MISO/MOSI)
- * CE -> PB0, CSN -> PC1
+  * on hardware spi bus (SCK/MISO/MOSI)
+  * CE -> PB0, CSN -> PC1
 * CAT25128 16KB SPI EEPROM
- * CS -> SS (PB4)
- * doesn't look like TT used the external eeprom for anything.
+  * CS -> SS (PB4)
+  * doesn't look like TT used the external eeprom for anything.
 * FTDI FT232R usb to uart
- * TXD/RXD seem to be connected through some isolator? to mcu
- * has custom PID: 0xdb14
-  * flashing to default ftdi PID: `sudo ./ft232r_prog --old-pid 0xdb14 --new-pid 0x6001` so serial port is setup on connect
- * DTR/RTS not connected. May want to connect either these to mcu RST (top pad of D5) w/ in-line 1uF cap for auto-reset, i.e. for arduino bootloader
+  * TXD/RXD seem to be connected through some isolator? to mcu
+  * has custom PID: 0xdb14
+    * flashing to default ftdi PID: `sudo ./ft232r_prog --old-pid 0xdb14 --new-pid 0x6001` so serial port is setup on connect
+  * DTR/RTS not connected. May want to connect either these to mcu RST (top pad of D5) w/ in-line 1uF cap for auto-reset, i.e. for arduino bootloader
 * when usb power is present, PB2 is pulled low (via Q3)
 * testpoint pads under battery compartment (from left to right)
- * MOSI, RST, SCK, MISO, GND, VDD3v3, SS, TCK, TMS, TDO, TDI
+  * MOSI, RST, SCK, MISO, GND, VDD3v3, SS, TCK, TMS, TDO, TDI
 * LCD panel
- * 128x32 matrix plus several custom symbols. Probably ST7565 chipset.  
- * U8x8 lib customized: U8X8_ST7565_RCXR01_4W_HW_SPI
- * mcu connectivity: SPI for SCLK & SI. CS -> PD5, RST -> PD6, RS(A0) -> PB3
+  * 128x32 matrix plus several custom symbols. Probably ST7565 chipset.  
+  * U8x8 lib customized: U8X8_ST7565_RCXR01_4W_HW_SPI
+  * mcu connectivity: SPI for SCLK & SI. CS -> PD5, RST -> PD6, RS(A0) -> PB3
 
 ### keypad matrix map
-|     |  PA5 |  PA2 |  PD3 |  PD4 |
-| --- | ---- | ---- | ---- | ---- |
-| PA1 |  SW1 |  SW2 |  SW3 |  SW4 |
-| PA3 |  SW5 |  SW6 |  SW7 |  SW8 |
-| PA6 |  SW9 | SW10 | SW11 | SW12 |
-| PA7 | SW13 | SW14 | SW15 | SW16 |
-| PA4 | SW17 | SW18 | SW19 | SW20 |
+|       |  PA5 |  PA2 |  PD3 |  PD4 |
+| ----- | ---- | ---- | ---- | ---- |
+| *PA1* |  SW1 |  SW2 |  SW3 |  SW4 |
+| *PA3* |  SW5 |  SW6 |  SW7 |  SW8 |
+| *PA6* |  SW9 | SW10 | SW11 | SW12 |
+| *PA7* | SW13 | SW14 | SW15 | SW16 |
+| *PA4* | SW17 | SW18 | SW19 | SW20 |
 
 ### intial fuses
  * (E:FE, H:9D, L:62)
