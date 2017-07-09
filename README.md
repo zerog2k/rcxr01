@@ -3,6 +3,11 @@ Various documentation and example code for Turning Technologies ResponseCard XR 
 
 inspired by [Travis Goodspeed's most excellent reverse engineering](http://travisgoodspeed.blogspot.com/2010/07/reversing-rf-clicker.html) of older versions of these clickers.
 The RCXR-01 seems to be quite handy as a portable NRF24 platform (i.e. handheld control/monitoring). I hope that you will find lots of nice hacks
+
+This is not about reverse engineering the existing software, but rather reusing the hardware completely. You get a nice lcd, matrix keypad, NRF24 radio, usb-uart, and mcu with plenty of flash that can run Arduino (or not if that's your thing ;).
+
+<img src="docs/rcxr_01_demo.jpg" width="400">
+
 ## hardware
 * ATmega 644PV mcu
  * 64k flash, 4k ram, 2k eeprom
@@ -56,10 +61,7 @@ The RCXR-01 seems to be quite handy as a portable NRF24 platform (i.e. handheld 
 
 ## images
 ### pcb front
-![pcb front](docs/rcxr_01_front_pcb.jpg)
+<img src="docs/rcxr_01_front_pcb.jpg" width="400">
 
 ### pcb rear
-![pcb rear](docs/rcxr_01_rear_pcb.jpg)
-
-### working demo
-![working demo](docs/rcxr_01_demo.jpg)
+<img src="docs/rcxr_01_rear_pcb.jpg" width="400">
