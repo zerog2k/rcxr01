@@ -12,6 +12,7 @@
 #include "RF24.h"
 
 #include "sleep.h"
+#include "rtc.h"
 
 /// radio stuff
 #define   RF_CE   0  //PB0
@@ -79,7 +80,9 @@ void setup()
   radio.startListening();
 
   // set up wdt as wake-up timer
-  setupWatchDogTimer(); 
+  setupWatchDogTimer();
+  rtc_init();
+   
 }
   
 void loop()
@@ -96,16 +99,18 @@ void loop()
     Serial.println(mykey);
     u8x8.clearLine(1);
     u8x8.setCursor(0,1);
-    u8x8.print("key: ");
+    u8x8.print("k: ");
     u8x8.print(mykey);
     payload[0] = mykey;
+    u8x8.print(" t:");
+    u8x8.print(seconds);
     radio.stopListening();
     radio.write(payload, sizeof(payload));
     i++;
   }
   
   on_battery = digitalRead(USB_DETECT_PIN);
-  u8x8.clearLine(2);
+  //u8x8.clearLine(2);
   u8x8.setCursor(0,2);
   u8x8.print("on_batt: ");
   u8x8.print(on_battery);

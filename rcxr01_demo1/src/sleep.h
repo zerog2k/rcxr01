@@ -17,7 +17,8 @@ void enterSleep(void)
   // SLEEP_MODE_PWR_SAVE
   // SLEEP_MODE_STANDBY
   // SLEEP_MODE_PWR_DOWN - the highest power saving mode
-  set_sleep_mode(SLEEP_MODE_PWR_SAVE);
+  //set_sleep_mode(SLEEP_MODE_EXT_STANDBY);
+  set_sleep_mode(SLEEP_MODE_IDLE);
   sleep_enable();
 
   // Now enter sleep mode.
