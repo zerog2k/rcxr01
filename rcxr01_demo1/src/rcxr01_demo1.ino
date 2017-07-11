@@ -80,9 +80,9 @@ void setup()
   radio.startListening();
 
   // set up wdt as wake-up timer
-  setupWatchDogTimer();
+  //setupWatchDogTimer();
   rtc_init();
-   
+  sei();
 }
   
 void loop()
@@ -119,6 +119,6 @@ void loop()
   u8x8.print("vcc: ");
   u8x8.print(readVcc());
 
-  //delay(100);
-  enterSleep(); 
+  delay(100);
+  //enterSleep(); 
 }
