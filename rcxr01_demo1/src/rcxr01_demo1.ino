@@ -111,11 +111,10 @@ void loop()
   }
 
   u8x8.setCursor(6,1);
-  u8x8.print(" t:");
+  u8x8.print("t:");
   u8x8.print(seconds);
 
   on_battery = digitalRead(USB_DETECT_PIN);
-  //u8x8.clearLine(2);
   u8x8.setCursor(0,2);
   u8x8.print("on_batt: ");
   u8x8.print(on_battery);
@@ -124,6 +123,5 @@ void loop()
   u8x8.print("vcc: ");
   u8x8.print(readVcc());
 
-  //delay(100);
-  enterSleep(); 
+  enterSleep(); // wake on wdt and rtc interrupts
 }
