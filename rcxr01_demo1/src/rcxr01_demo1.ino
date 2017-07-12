@@ -79,7 +79,7 @@ void setup()
   printf_begin();
   Serial.println("starting...");
   radio.printDetails();
-  radio.startListening();
+  //radio.startListening();  // dont use this unless we need to - consumes about 13mA
 
   // set up wdt as wake-up timer
   setupWatchDogTimer();

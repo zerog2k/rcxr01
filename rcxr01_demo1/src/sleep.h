@@ -3,6 +3,12 @@
 #include <avr/wdt.h>
 #include <avr/cpufunc.h>
 
+/*
+  contains various functions for sleep & wdt
+  from: http://donalmorrissey.blogspot.com/2010/04/sleeping-arduino-part-5-wake-up-via.html
+
+*/
+
 // Watchdog Interrupt Service. This is executed when watchdog timed out.
 ISR(WDT_vect) {
     _NOP();

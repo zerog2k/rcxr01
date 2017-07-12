@@ -1,5 +1,5 @@
 // rtc using timer2 and 32.768khz watch crystal
-// from AVR134 app note
+// ref: AVR130 & AVR134 app notes
 
 #include <avr/interrupt.h>
 
