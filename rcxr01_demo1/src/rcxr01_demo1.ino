@@ -61,6 +61,7 @@ void setup()
 
   Serial.begin(9600);
   u8x8.begin();
+  lcd_clear_all_symbols(u8x8.getU8x8());
   u8x8.setPowerSave(0);
   //u8x8.setFont(u8x8_font_chroma48medium8_r);
   u8x8.setFont(u8x8_font_5x8_f);
