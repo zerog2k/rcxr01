@@ -1,5 +1,7 @@
 // custom lcd symbols on RCXR-01
 
+u8x8_t * u8x8_c; // low-level c access
+
 // custom symbols on page 8
 #define PAGENUM     0x08
 
@@ -30,63 +32,93 @@
 #define SYM_BC      0x3b
 
 // signal bar graph
-#define SIG_0       0x55
-#define SIG_1       0x56
-#define SIG_2       0x57
-#define SIG_3       0x58
-#define SIG_4       0x59
-#define SIG_5       0x5f
+#define SIG_1       0x55
+#define SIG_2       0x56
+#define SIG_3       0x57
+#define SIG_4       0x58
+#define SIG_5       0x59
+#define SIG_6       0x5f
 
 // battery bar graph
-#define BAT_0       0x5a
-#define BAT_1       0x5b
-#define BAT_2       0x5c
+#define BAT_3       0x5a
+#define BAT_2       0x5b
+#define BAT_1       0x5c
 
 // no (crossed circle)
 #define SYM_NO      0x5d
 // yes (check mark)
 #define SYM_YES     0x5e
 
-void lcd_set_no(u8x8_t * u8x8);
-void lcd_set_yes(u8x8_t * u8x8);
+void lcd_set_no();
+void lcd_set_yes();
 void lcd_set_chan(uint8_t chan);
 
-void lcd_write(u8x8_t * u8x8, uint8_t addr, uint8_t data);
+void lcd_write(uint8_t addr, uint8_t data);
 
-void lcd_clear_all_symbols(u8x8_t * u8x8)
+void lcd_set_bat(uint8_t level)
+{
+  switch (level)
+  {
+    case 0:
+      lcd_write(BAT_1, 0);
+      lcd_write(BAT_2, 0);
+      lcd_write(BAT_3, 0);
+      break;
+    case 1:
+      lcd_write(BAT_1, 1);
+      lcd_write(BAT_2, 0);
+      lcd_write(BAT_3, 0);
+      break;
+    case2:
+      lcd_write(BAT_1, 1);
+      lcd_write(BAT_2, 1);
+      lcd_write(BAT_3, 0);
+      break;
+    case 3:
+    default:
+      lcd_write(BAT_1, 1);
+      lcd_write(BAT_2, 1);
+      lcd_write(BAT_3, 1);
+      break;                    
+  }
+}
+
+void lcd_set_sig(uint8_t level);
+
+void lcd_clear_all_symbols()
 {
   uint8_t i, c = 0;
-  u8x8_cad_StartTransfer(u8x8);
-  u8x8_cad_SendCmd(u8x8, 0xb0 | PAGENUM);    
-  u8x8_cad_SendCmd(u8x8, 0x10 | 0);  
-  u8x8_cad_SendCmd(u8x8, 0x00 | 0);
+  u8x8_cad_StartTransfer(u8x8_c);
+  u8x8_cad_SendCmd(u8x8_c, 0xb0 | PAGENUM);    
+  u8x8_cad_SendCmd(u8x8_c, 0x10 | 0);  
+  u8x8_cad_SendCmd(u8x8_c, 0x00 | 0);
   for (i=0; i<255; i++)
   {
-    u8x8_cad_SendData(u8x8, 1, &c);
+    u8x8_cad_SendData(u8x8_c, 1, &c);
   }
-  u8x8_cad_EndTransfer(u8x8);      
+  u8x8_cad_EndTransfer(u8x8_c);      
 }
 
-void lcd_set_yes(u8x8_t * u8x8)
+void lcd_set_yes()
 {
-  lcd_write(u8x8, SYM_YES, 1);
-  lcd_write(u8x8, SYM_NO, 0);
+  lcd_write(SYM_YES, 1);
+  lcd_write(SYM_NO, 0);
 }
 
-void lcd_set_no(u8x8_t * u8x8)
+void lcd_set_no()
 {
-  lcd_write(u8x8, SYM_NO, 1);
-  lcd_write(u8x8, SYM_YES, 0);
+  lcd_write(SYM_NO, 1);
+  lcd_write(SYM_YES, 0);
 }
 
-void lcd_write(u8x8_t * u8x8, uint8_t addr, uint8_t data)
+void lcd_write(uint8_t addr, uint8_t data)
 {
-  u8x8_cad_StartTransfer(u8x8);
-  u8x8_cad_SendCmd(u8x8, 0xb0 | PAGENUM);    
-  u8x8_cad_SendCmd(u8x8, 0x10 | (addr >> 4));  
-  u8x8_cad_SendCmd(u8x8, 0x00 | (addr & 0xF));
-  u8x8_cad_SendData(u8x8, 1, &data);
-  u8x8_cad_EndTransfer(u8x8);
+  u8x8_cad_StartTransfer(u8x8_c);
+  u8x8_cad_SendCmd(u8x8_c, 0xb0 | PAGENUM);    
+  u8x8_cad_SendCmd(u8x8_c, 0x10 | (addr >> 4));  
+  u8x8_cad_SendCmd(u8x8_c, 0x00 | (addr & 0xF));
+  u8x8_cad_SendData(u8x8_c, 1, &data);
+  u8x8_cad_EndTransfer(u8x8_c);
 }
 
 

@@ -52,6 +52,9 @@ Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS
 /// usb voltage detection stuff
 #define USB_DETECT_PIN  2   // PB2
 uint8_t on_battery;
+#define BATT_LEVEL_HIGH 2500
+#define BATT_LEVEL_MED  2100
+#define BATT_LEVEL_LOW  1900
 
 uint8_t i;
 
@@ -61,7 +64,8 @@ void setup()
 
   Serial.begin(9600);
   u8x8.begin();
-  lcd_clear_all_symbols(u8x8.getU8x8());
+  u8x8_c = u8x8.getU8x8(); // low-level c access for custom lcd funcs
+  lcd_clear_all_symbols();
   u8x8.setPowerSave(0);
   //u8x8.setFont(u8x8_font_chroma48medium8_r);
   u8x8.setFont(u8x8_font_5x8_f);
@@ -95,9 +99,9 @@ void loop()
   if (mykey) {
     // alternate yes/no between presses
     if (i%2==0) {
-          lcd_set_yes(u8x8.getU8x8());
+          lcd_set_yes();
     } else {
-          lcd_set_no(u8x8.getU8x8());
+          lcd_set_no();
     }
     Serial.println(mykey);
     u8x8.clearLine(1);
@@ -120,9 +124,18 @@ void loop()
   u8x8.print("on_batt: ");
   u8x8.print(on_battery);
 
+  uint16_t batt_mv = readVcc();
   u8x8.setCursor(0,3);
   u8x8.print("vcc: ");
-  u8x8.print(readVcc());
+  u8x8.print(batt_mv);
+  if (batt_mv > BATT_LEVEL_HIGH)
+    lcd_set_bat(3);
+  else if (batt_mv > BATT_LEVEL_MED)
+    lcd_set_bat(2);
+  else if (batt_mv > BATT_LEVEL_LOW)
+    lcd_set_bat(1);
+  else
+    lcd_set_bat(0);
 
   enterSleep(); // wake on wdt and rtc interrupts
 }
