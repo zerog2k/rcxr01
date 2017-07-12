@@ -13,19 +13,24 @@ ISR(TIMER2_OVF_vect)
 
 void rtc_init()
 {
-    // clear T2 interrupt TCR2BUBmasks
+    // clear T2 interrupt masks
     TIMSK2 = 0;
 
     // use ext crystal osc on TOSC1/2
     ASSR |= _BV(AS2);
 
-    //reset prescalers
-    GTCCR |= _BV(PSRASY);
+    TCNT2 = 0;
 
-    //loop_until_bit_is_clear(ASSR, TCR2BUB);
+    // required because somebody else is mucking with this register (probably arduino libs)
+    TCCR2A = 0;
+
     // set clock source prescaler to clk_T2S / 128 -> 1 sec overflow
-    TCCR2B |= _BV(CS22) | _BV(CS20);
+    TCCR2B = _BV(CS22) | _BV(CS20);
+    loop_until_bit_is_clear(ASSR, TCR2BUB);
 
+    //reset prescalers    
+    GTCCR |= _BV(PSRASY); // not sure if necessary
+    
     // clear interrupt flags
     TIFR2 = 0;
 

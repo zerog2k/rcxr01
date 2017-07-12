@@ -57,11 +57,13 @@ uint8_t i;
 
 void setup()
 {
-  Serial.begin(9600);
+  delay(100);
 
+  Serial.begin(9600);
   u8x8.begin();
   u8x8.setPowerSave(0);
-  u8x8.setFont(u8x8_font_chroma48medium8_r);
+  //u8x8.setFont(u8x8_font_chroma48medium8_r);
+  u8x8.setFont(u8x8_font_5x8_f);
   u8x8.drawString(0,0,"rxcr-01 demo");
   u8x8.setCursor(0,1);
 
@@ -80,7 +82,7 @@ void setup()
   radio.startListening();
 
   // set up wdt as wake-up timer
-  //setupWatchDogTimer();
+  setupWatchDogTimer();
   rtc_init();
   sei();
 }
@@ -102,13 +104,16 @@ void loop()
     u8x8.print("k: ");
     u8x8.print(mykey);
     payload[0] = mykey;
-    u8x8.print(" t:");
-    u8x8.print(seconds);
+
     radio.stopListening();
     radio.write(payload, sizeof(payload));
     i++;
   }
-  
+
+  u8x8.setCursor(6,1);
+  u8x8.print(" t:");
+  u8x8.print(seconds);
+
   on_battery = digitalRead(USB_DETECT_PIN);
   //u8x8.clearLine(2);
   u8x8.setCursor(0,2);
@@ -119,6 +124,6 @@ void loop()
   u8x8.print("vcc: ");
   u8x8.print(readVcc());
 
-  delay(100);
-  //enterSleep(); 
+  //delay(100);
+  enterSleep(); 
 }
