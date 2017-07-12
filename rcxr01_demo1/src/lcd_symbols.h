@@ -25,6 +25,25 @@ u8x8_t * u8x8_c; // low-level c access
 #define CH_ONES_b   0x11
 #define CH_ONES_a   0x12
 
+#define NUM_SEGS  7
+const uint8_t ch_tens_map[NUM_SEGS] = { CH_TENS_a, CH_TENS_b, CH_TENS_c, CH_TENS_d, CH_TENS_e, CH_TENS_f, CH_TENS_g };
+const uint8_t ch_ones_map[NUM_SEGS] = { CH_ONES_a, CH_ONES_b, CH_ONES_c, CH_ONES_d, CH_ONES_e, CH_ONES_f, CH_ONES_g };
+
+// digit to segment map: a,b,c,d,e,f
+const uint8_t digits[][NUM_SEGS] = {
+//  a, b, c, d, e, f, g
+  { 1, 1, 1, 1, 1, 1, 0 }, // 0
+  { 0, 1, 1, 0, 0, 0, 0 }, // 1
+  { 1, 1, 0, 1, 1, 0, 1 }, // 2
+  { 1, 1, 1, 1, 0, 0, 1 }, // 3
+  { 0, 1, 1, 0, 0, 1, 1 }, // 4
+  { 1, 0, 1, 1, 0, 1, 1 }, // 5
+  { 1, 0, 1, 1, 1, 1, 1 }, // 6
+  { 1, 1, 1, 0, 0, 0, 0 }, // 7
+  { 1, 1, 1, 1, 1, 1, 1 }, // 8
+  { 1, 1, 1, 1, 0, 1, 1 }  // 9
+ };
+
 // some other symbols
 #define SYM_1       0x27 
 #define SYM_23      0x2d
@@ -49,12 +68,16 @@ u8x8_t * u8x8_c; // low-level c access
 // yes (check mark)
 #define SYM_YES     0x5e
 
-void lcd_set_no();
+// function prototypes
+void lcd_set_bat(uint8_t level);
+void lcd_clear_all_symbols();
 void lcd_set_yes();
+void lcd_set_no();
 void lcd_set_chan(uint8_t chan);
-
+void lcd_set_sig(uint8_t level); // TODO
 void lcd_write(uint8_t addr, uint8_t data);
 
+// function definitions
 void lcd_set_bat(uint8_t level)
 {
   switch (level)
@@ -83,8 +106,6 @@ void lcd_set_bat(uint8_t level)
   }
 }
 
-void lcd_set_sig(uint8_t level);
-
 void lcd_clear_all_symbols()
 {
   uint8_t i, c = 0;
@@ -111,6 +132,24 @@ void lcd_set_no()
   lcd_write(SYM_YES, 0);
 }
 
+void lcd_set_chan(uint8_t chan)
+{
+  uint8_t i, n;
+  lcd_write(SYM_CH, 1);
+  // process tens
+  n = (chan / 10) % 10;
+  for (i=0; i < NUM_SEGS; i++)
+  {
+    lcd_write(ch_tens_map[i], digits[n][i]);
+  }
+  // process ones
+  n = chan % 10;
+  for (i=0; i < NUM_SEGS; i++)
+  {
+    lcd_write(ch_ones_map[i], digits[n][i]);
+  }
+}
+
 void lcd_write(uint8_t addr, uint8_t data)
 {
   u8x8_cad_StartTransfer(u8x8_c);
@@ -120,7 +159,6 @@ void lcd_write(uint8_t addr, uint8_t data)
   u8x8_cad_SendData(u8x8_c, 1, &data);
   u8x8_cad_EndTransfer(u8x8_c);
 }
-
 
 
 
