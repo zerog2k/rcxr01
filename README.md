@@ -23,7 +23,8 @@ This is not about reverse engineering the existing software, but rather reusing 
   * TXD/RXD seem to be connected through some isolator? to mcu
   * has custom PID: 0xdb14
     * flashing to default ftdi PID: `sudo ./ft232r_prog --old-pid 0xdb14 --new-pid 0x6001` so serial port is setup on connect
-  * DTR/RTS not connected. May want to connect either these to mcu RST (top pad of D5) w/ in-line 1uF cap for auto-reset, i.e. for arduino bootloader
+    * https://github.com/eswierk/ft232r_prog
+  * DTR/RTS not connected. May want to connect either these to mcu RST (top pad of D5) w/ in-line 1uF cap for auto-reset, i.e. for arduino bootloader (I found 4.7uF cap works better for me.)
 * when usb power is present, PB2 is pulled low (via Q3)
 * testpoint pads under battery compartment (from left to right)
   * MOSI, RST, SCK, MISO, GND, VDD3v3, SS, TCK, TMS, TDO, TDI
