@@ -69,7 +69,7 @@ void lcd_set_bat(uint8_t level)
       lcd_write(BAT_2, 0);
       lcd_write(BAT_3, 0);
       break;
-    case2:
+    case 2:
       lcd_write(BAT_1, 1);
       lcd_write(BAT_2, 1);
       lcd_write(BAT_3, 0);
