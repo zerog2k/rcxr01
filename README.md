@@ -12,7 +12,7 @@ This is not about reverse engineering the existing software, but rather reusing 
 * ATmega 644PV mcu
   * 64k flash, 4k ram, 2k eeprom
   * internal RC 1MHz clock (CKDIV8 fuse set)
-  * 32khz crystal on TOSC1/2 (timer2 can be setup as rtc)
+  * 32khz crystal on TOSC1/2 (timer2 can be setup as rtc - may be missing some loading caps?)
 * NRF24L01 radio
   * on hardware spi bus (SCK/MISO/MOSI)
   * CE -> PB0, CSN -> PC1
@@ -29,7 +29,7 @@ This is not about reverse engineering the existing software, but rather reusing 
 * testpoint pads under battery compartment (from left to right)
   * MOSI, RST, SCK, MISO, GND, VDD3v3, SS, TCK, TMS, TDO, TDI
 * LCD panel
-  * 128x32 matrix plus several custom symbols. Probably ST7565 chipset.  
+  * 128x32 matrix plus several custom symbols. Probably [ST7565 chipset](https://edeca.net/pages/the-st7565-display-controller/).  
   * U8x8 lib customized: U8X8_ST7565_RCXR01_4W_HW_SPI
   * mcu connectivity: SPI for SCLK & SI. CS -> PD5, RST -> PD6, RS(A0) -> PB3
 
