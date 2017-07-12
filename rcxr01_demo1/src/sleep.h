@@ -17,16 +17,13 @@ void enterSleep(void)
   // SLEEP_MODE_PWR_SAVE
   // SLEEP_MODE_STANDBY
   // SLEEP_MODE_PWR_DOWN - the highest power saving mode
-  set_sleep_mode(SLEEP_MODE_PWR_SAVE);
-  sleep_enable();
+  //set_sleep_mode(SLEEP_MODE_EXT_STANDBY);
+  set_sleep_mode(SLEEP_MODE_EXT_STANDBY);
 
   // Now enter sleep mode.
   sleep_mode();
 
   // The program will continue from here after the WDT timeout
-
-  // First thing to do is disable sleep.
-  sleep_disable();
 
   // Re-enable the peripherals.
   power_all_enable();
@@ -72,7 +69,7 @@ void setupWatchDogTimer() {
   */
   // we are using 1MHz Internal RC Osc.
 
-  WDTCSR  = (0<<WDP3) | (0<<WDP2) | (1<<WDP1) | (1<<WDP0); 
+  WDTCSR  = (0<<WDP3) | (1<<WDP2) | (0<<WDP1) | (0<<WDP0); 
   
   // Enable the WD interrupt (note: no reset).
   WDTCSR |= _BV(WDIE);
