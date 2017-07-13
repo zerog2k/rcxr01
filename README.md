@@ -29,7 +29,7 @@ This is not about reverse engineering the existing software, but rather reusing 
 * testpoint pads under battery compartment (from left to right)
   * MOSI, RST, SCK, MISO, GND, VDD3v3, SS, TCK, TMS, TDO, TDI
 * LCD panel
-  * 128x32 matrix plus several custom symbols. Probably [ST7565 chipset](https://edeca.net/pages/the-st7565-display-controller/).  
+  * 128x32 matrix plus several custom symbols, possibly [ST7565 chipset](https://edeca.net/pages/the-st7565-display-controller/).  
   * U8x8 lib customized: U8X8_ST7565_RCXR01_4W_HW_SPI
   * mcu connectivity: SPI for SCLK & SI. CS -> PD5, RST -> PD6, RS(A0) -> PB3
 
@@ -47,7 +47,7 @@ This is not about reverse engineering the existing software, but rather reusing 
  * http://eleccelerator.com/fusecalc/fusecalc.php?chip=atmega644p&LOW=62&HIGH=9D&EXTENDED=FE&LOCKBIT=FF
 
 ### flashing arduino bootloader
- * use something like usbasp, ftdi, etc. Cheap usbasp adapter worked fine for me.
+ * use something like usbasp, ftdi, etc. Cheap usbasp adapter worked fine for me. Something similar to [this adapter from Banggood](https://www.banggood.com/USBASP-USBISP-3_3-5V-AVR-Downloader-Programmer-With-ATMEGA8-ATMEGA128-p-934425.html?p=WX0407753399201409DA)
  * https://github.com/MCUdude/MightyCore/tree/master/avr/bootloaders/optiboot_flash/atmega644p
   * use `optiboot_flash_atmega644p_9600_1000000L.hex` (tried running 8Mhz@38400, but uploading was not stable for me, at least on initial attempts.)
    * set fuses: `avrdude -v -p atmega644p -c usbasp -P usb -e -U lock:w:0x3f:m -U efuse:w:0xfd:m -U hfuse:w:0xd6:m -U lfuse:w:0x62:m`
