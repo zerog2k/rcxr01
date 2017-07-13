@@ -12,7 +12,9 @@ This is not about reverse engineering the existing software, but rather reusing 
 * ATmega 644PV mcu
   * 64k flash, 4k ram, 2k eeprom
   * internal RC 1MHz clock (CKDIV8 fuse set)
-  * 32khz crystal on TOSC1/2 (timer2 can be setup as rtc - may be missing some loading caps?)
+  * 32khz crystal on TOSC1/2 
+    * timer2 can be setup as rtc
+    * may be missing some loading caps? In some experiments, I'm having a tough time getting the crystal to start. I used 6pF caps, and I think that helped. But also doing some experiments where just grounding the crystal can it seems to help it start up (without needing extra load caps).
 * NRF24L01 radio
   * on hardware spi bus (SCK/MISO/MOSI)
   * CE -> PB0, CSN -> PC1
