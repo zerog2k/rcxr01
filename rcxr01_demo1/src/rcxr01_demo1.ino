@@ -68,8 +68,7 @@ void setup()
   u8x8_c = u8x8.getU8x8(); // low-level c access for custom lcd funcs
   lcd_clear_all_symbols();
   u8x8.setPowerSave(0);
-  //u8x8.setFont(u8x8_font_chroma48medium8_r);
-  u8x8.setFont(u8x8_font_5x8_f);
+  u8x8.setFont(u8x8_font_chroma48medium8_r);
   u8x8.drawString(0,0,"rxcr-01 demo");
   u8x8.setCursor(0,1);
 
