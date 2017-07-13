@@ -22,6 +22,7 @@ RF24 radio(RF_CE, RF_CSN);
 const uint8_t txaddr[] = { 0xAD, 0xAC, 0xAB, 0xAA, 0x00 };
 const uint8_t rxaddr[] = { 0xAD, 0xAC, 0xAB, 0xAA, 0x01 };
 uint8_t payload[32];
+#define MSG_TYPE_KEYPRESS 0xA1
 
 /// LCD stuff
 
@@ -80,7 +81,7 @@ void setup()
   radio.openWritingPipe(txaddr);
   radio.openReadingPipe(1, rxaddr);
   //radio.enableDynamicPayloads();
-  //radio.setAutoAck(false);
+  radio.setAutoAck(true);
   printf_begin();
   Serial.println("starting...");
   radio.printDetails();
@@ -108,10 +109,12 @@ void loop()
     u8x8.setCursor(0,1);
     u8x8.print("k: ");
     u8x8.print(mykey);
-    payload[0] = mykey;
-
+    payload[0] = MSG_TYPE_KEYPRESS;
+    payload[1] = mykey;
     radio.stopListening();
-    radio.write(payload, sizeof(payload));
+    radio.write(payload, 2);
+    lcd_animate_sig(6,50,2);
+    lcd_set_sig(0);
     i++;
   }
 

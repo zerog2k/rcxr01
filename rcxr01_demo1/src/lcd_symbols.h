@@ -57,6 +57,8 @@ const uint8_t digits[][NUM_SEGS] = {
 #define SIG_4       0x58
 #define SIG_5       0x59
 #define SIG_6       0x5f
+#define MAX_SIGNAL    6
+const uint8_t signal_map[MAX_SIGNAL] = { SIG_1, SIG_2, SIG_3, SIG_4, SIG_5, SIG_6 };
 
 // battery bar graph
 #define BAT_3       0x5a
@@ -70,11 +72,12 @@ const uint8_t digits[][NUM_SEGS] = {
 
 // function prototypes
 void lcd_set_bat(uint8_t level);
+void lcd_set_sig(uint8_t level);
+void lcd_animate_sig(uint8_t level, uint8_t delay_time);
 void lcd_clear_all_symbols();
 void lcd_set_yes();
 void lcd_set_no();
 void lcd_set_chan(uint8_t chan);
-void lcd_set_sig(uint8_t level); // TODO
 void lcd_write(uint8_t addr, uint8_t data);
 
 // function definitions
@@ -103,6 +106,36 @@ void lcd_set_bat(uint8_t level)
       lcd_write(BAT_2, 1);
       lcd_write(BAT_3, 1);
       break;                    
+  }
+}
+
+void lcd_set_sig(uint8_t level)
+{
+  uint8_t i, val;
+
+  for (i=0; i < MAX_SIGNAL; i++)
+  {
+    if (i < level)
+      val = 1;
+    else
+      val = 0;
+    lcd_write(signal_map[i], val);
+  }
+}
+
+void lcd_animate_sig(uint8_t level, uint8_t delay_time, uint8_t repeat)
+{
+  uint8_t i,j;
+  if (level > MAX_SIGNAL)
+    level = MAX_SIGNAL;  
+  for (i=0; i < repeat; i++)
+  {
+    for (j=0; j <= level; j++)
+    {
+      lcd_set_sig(j);
+      delay(delay_time);
+    }
+    delay(delay_time);
   }
 }
 
