@@ -1,15 +1,11 @@
 // demo for RCXR-01
 
 #include <Arduino.h>
-#include <SPI.h>
-#include <Wire.h>
-#include <U8x8lib.h>
-#include "lcd_symbols.h"
 
+#include "lcd.h"
 #include "vcc.h"
 #include <printf.h>
 #include "RF24.h"
-
 #include "sleep.h"
 #include "rtc.h"
 #include "keypad.h"
@@ -24,13 +20,6 @@ const uint8_t rxaddr[] = { 0xAD, 0xAC, 0xAB, 0xAA, 0x01 };
 uint8_t payload[32];
 #define MSG_TYPE_KEYPRESS 0xA1
 
-/// LCD stuff
-
-#define CS 13 //PD5
-#define RST 14 //PD6
-#define RS 3 //PB3
-
-U8X8_ST7565_RCXR01_4W_HW_SPI u8x8(/* cs=*/ CS, /* dc=*/ RS, /* reset=*/ RST);
 
 /// usb voltage detection stuff
 #define USB_DETECT_PIN  2   // PB2

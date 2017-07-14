@@ -1,7 +1,17 @@
-// custom lcd symbols on RCXR-01
+/// LCD stuff for RCXR-01
+#include <SPI.h>
+#include <Wire.h>
+#include <U8x8lib.h>
+
+#define CS 13 //PD5
+#define RST 14 //PD6
+#define RS 3 //PB3
+
+U8X8_ST7565_RCXR01_4W_HW_SPI u8x8(/* cs=*/ CS, /* dc=*/ RS, /* reset=*/ RST);
 
 u8x8_t * u8x8_c; // low-level c access
 
+// custom lcd symbols on RCXR-01
 // custom symbols on page 8
 #define PAGENUM     0x08
 
