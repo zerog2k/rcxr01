@@ -94,9 +94,9 @@ void loop()
     payload[1] = mykey;
     radio.stopListening();
     radio.write(payload, 2);
-    lcd_animate_sig(6,50,2);
-    lcd_set_sig(0);
+    lcd_animate_sig(6);
     i++;
+    return;
   }
 
   u8x8.setCursor(5,1);

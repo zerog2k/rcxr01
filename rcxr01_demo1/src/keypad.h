@@ -15,10 +15,12 @@ uint8_t hexaKeys[ROWS][COLS] = {
 uint8_t rowPins[ROWS] = {25, 27, 30, 31, 28}; //connect to the row pinouts of the keypad
 uint8_t colPins[COLS] = {29, 26, 11, 12}; //connect to the column pinouts of the keypad
 
-//initialize an instance of class NewKeypad
+// initialize an instance of class NewKeypad
 Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
 
-// 
+/// keypad layout section
+// XR vs XR2 have slightly different keypad labeling
+
 #define VARIANT_XR
 // #define VARIANT_XR2
 
