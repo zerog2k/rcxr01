@@ -106,7 +106,7 @@ void loop()
     Serial.println(mykey);
     u8x8.clearLine(1);
     u8x8.setCursor(0,1);
-    u8x8.print("k: ");
+    u8x8.print("k:");
     u8x8.print(mykey);
     payload[0] = MSG_TYPE_KEYPRESS;
     payload[1] = mykey;
@@ -117,19 +117,20 @@ void loop()
     i++;
   }
 
-  u8x8.setCursor(6,1);
+  u8x8.setCursor(5,1);
   u8x8.print("t:");
   u8x8.print(seconds);
 
   on_battery = digitalRead(USB_DETECT_PIN);
   u8x8.setCursor(0,2);
-  u8x8.print("on_batt: ");
+  u8x8.print("on_bat:");
   u8x8.print(on_battery);
 
   uint16_t batt_mv = readVcc();
   u8x8.setCursor(0,3);
-  u8x8.print("vcc: ");
+  u8x8.print("v:");
   u8x8.print(batt_mv);
+  lcd_set_bat_shell(BAT_SHELL_ON); 
   if (batt_mv > BATT_LEVEL_HIGH)
     lcd_set_bat(3);
   else if (batt_mv > BATT_LEVEL_MED)
@@ -137,7 +138,10 @@ void loop()
   else if (batt_mv > BATT_LEVEL_LOW)
     lcd_set_bat(1);
   else
+  {
     lcd_set_bat(0);
+    lcd_set_bat_shell(BAT_SHELL_BLINK_SLOW);
+  }
 
   enterSleep(); // wake on wdt and rtc interrupts
 }

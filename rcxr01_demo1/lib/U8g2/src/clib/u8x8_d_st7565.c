@@ -1008,7 +1008,7 @@ static const uint8_t u8x8_d_st7565_rcxr01_init_seq[] = {
   
   U8X8_C(0x0ae),		                /* display off */
   U8X8_C(0x0a5),		                /* enter powersafe: all pixel on, issue 142 */
-  
+  U8X8_CA(0xad, 0b11),              /* turn on status indicator */
   U8X8_END_TRANSFER(),             	/* disable chip */
   U8X8_END()             			/* end of sequence */
 };

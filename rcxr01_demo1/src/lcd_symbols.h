@@ -65,6 +65,11 @@ const uint8_t signal_map[MAX_SIGNAL] = { SIG_1, SIG_2, SIG_3, SIG_4, SIG_5, SIG_
 #define BAT_2       0x5b
 #define BAT_1       0x5c
 
+#define BAT_SHELL_OFF         0x00
+#define BAT_SHELL_BLINK_SLOW  0x01
+#define BAT_SHELL_BLINK_FAST  0x02
+#define BAT_SHELL_ON          0x03
+
 // no (crossed circle)
 #define SYM_NO      0x5d
 // yes (check mark)
@@ -72,6 +77,7 @@ const uint8_t signal_map[MAX_SIGNAL] = { SIG_1, SIG_2, SIG_3, SIG_4, SIG_5, SIG_
 
 // function prototypes
 void lcd_set_bat(uint8_t level);
+void lcd_set_bat_shell(uint8_t state);
 void lcd_set_sig(uint8_t level);
 void lcd_animate_sig(uint8_t level, uint8_t delay_time);
 void lcd_clear_all_symbols();
@@ -107,6 +113,18 @@ void lcd_set_bat(uint8_t level)
       lcd_write(BAT_3, 1);
       break;                    
   }
+}
+
+void lcd_set_bat_shell(uint8_t state)
+{
+  if (state > BAT_SHELL_ON)
+  {
+    state = BAT_SHELL_ON;
+  }
+  u8x8_cad_StartTransfer(u8x8_c);
+  u8x8_cad_SendCmd(u8x8_c, 0xAD);
+  u8x8_cad_SendArg(u8x8_c, state);    
+  u8x8_cad_EndTransfer(u8x8_c);
 }
 
 void lcd_set_sig(uint8_t level)
