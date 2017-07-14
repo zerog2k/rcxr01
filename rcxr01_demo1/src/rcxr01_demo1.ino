@@ -88,7 +88,9 @@ void setup()
   lcd_set_chan(radio.getChannel());
   // set up wdt as wake-up timer
   setupWatchDogTimer();
+  Serial.print("rtc_init start.");
   rtc_init();
+  Serial.println("rtc_init done.");
   sei();
 }
   
