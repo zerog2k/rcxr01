@@ -1,7 +1,6 @@
 // demo for RCXR-01
 
 #include <Arduino.h>
-#include <Keypad.h>
 #include <SPI.h>
 #include <Wire.h>
 #include <U8x8lib.h>
@@ -13,6 +12,7 @@
 
 #include "sleep.h"
 #include "rtc.h"
+#include "keypad.h"
 
 /// radio stuff
 #define   RF_CE   0  //PB0
@@ -31,24 +31,6 @@ uint8_t payload[32];
 #define RS 3 //PB3
 
 U8X8_ST7565_RCXR01_4W_HW_SPI u8x8(/* cs=*/ CS, /* dc=*/ RS, /* reset=*/ RST);
-
-/// keypad stuff
-const uint8_t ROWS = 5; //four rows
-const uint8_t COLS = 4; //four columns
-
-uint8_t hexaKeys[ROWS][COLS] = {
-  { 1,  2,  3,  4},
-  { 5,  6,  7,  8},
-  { 9, 10, 11, 12},
-  {13, 14, 15, 16},
-  {17, 18, 19, 20}
-};
-
-byte rowPins[ROWS] = {25, 27, 30, 31, 28}; //connect to the row pinouts of the keypad
-byte colPins[COLS] = {29, 26, 11, 12}; //connect to the column pinouts of the keypad
-
-//initialize an instance of class NewKeypad
-Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
 
 /// usb voltage detection stuff
 #define USB_DETECT_PIN  2   // PB2
