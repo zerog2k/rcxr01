@@ -1,7 +1,17 @@
-// custom lcd symbols on RCXR-01
+/// LCD stuff for RCXR-01
+#include <SPI.h>
+#include <Wire.h>
+#include <U8x8lib.h>
+
+#define CS 13 //PD5
+#define RST 14 //PD6
+#define RS 3 //PB3
+
+U8X8_ST7565_RCXR01_4W_HW_SPI u8x8(/* cs=*/ CS, /* dc=*/ RS, /* reset=*/ RST);
 
 u8x8_t * u8x8_c; // low-level c access
 
+// custom lcd symbols on RCXR-01
 // custom symbols on page 8
 #define PAGENUM     0x08
 
@@ -141,20 +151,24 @@ void lcd_set_sig(uint8_t level)
   }
 }
 
-void lcd_animate_sig(uint8_t level, uint8_t delay_time, uint8_t repeat)
+void lcd_animate_sig(uint8_t level)
 {
-  uint8_t i,j;
+  uint8_t i, delay_time;
+  delay_time = 20;  
   if (level > MAX_SIGNAL)
-    level = MAX_SIGNAL;  
-  for (i=0; i < repeat; i++)
+    level = MAX_SIGNAL; 
+  for (i=0; i <= level; i++)
   {
-    for (j=0; j <= level; j++)
-    {
-      lcd_set_sig(j);
-      delay(delay_time);
-    }
+    lcd_set_sig(i);
     delay(delay_time);
   }
+  delay(delay_time*2);
+  for (i=level; i>0; i--)
+  {
+    lcd_set_sig(i-1);
+    delay(delay_time);    
+  }
+
 }
 
 void lcd_clear_all_symbols()
