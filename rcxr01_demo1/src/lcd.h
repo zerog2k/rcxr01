@@ -162,7 +162,7 @@ void lcd_animate_sig(uint8_t level)
     lcd_set_sig(i);
     delay(delay_time);
   }
-  delay(delay_time*2);
+  delay(delay_time*3);
   for (i=level; i>0; i--)
   {
     lcd_set_sig(i-1);
