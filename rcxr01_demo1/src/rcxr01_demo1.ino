@@ -9,6 +9,7 @@
 #include "sleep.h"
 #include "rtc.h"
 #include "keypad.h"
+#include "serno.h"
 
 /// radio stuff
 #define   RF_CE   0  //PB0
@@ -67,6 +68,8 @@ void setup()
   Serial.print("rtc_init start.");
   rtc_init();
   Serial.println("rtc_init done.");
+  print_ser_num();
+  print_lot_code();  
   sei();
 }
   
