@@ -52,7 +52,7 @@ This is not about reverse engineering the existing software, but rather reusing 
  * use something like usbasp, ftdi, etc. Cheap usbasp adapter worked fine for me. Something similar to [this adapter from Banggood](https://www.banggood.com/USBASP-USBISP-3_3-5V-AVR-Downloader-Programmer-With-ATMEGA8-ATMEGA128-p-934425.html?p=WX0407753399201409DA)
  * https://github.com/MCUdude/MightyCore/tree/master/avr/bootloaders/optiboot_flash/atmega644p
   * use `optiboot_flash_atmega644p_9600_1000000L.hex` (tried running 8Mhz@38400, but uploading was not stable for me, at least on initial attempts.)
-   * set fuses: `avrdude -v -p atmega644p -c usbasp -P usb -e -U lock:w:0x3f:m -U efuse:w:0xfd:m -U hfuse:w:0xd6:m -U lfuse:w:0x62:m`
+   * set fuses: `avrdude -v -p atmega644p -c usbasp -P usb -e -U lock:w:0x3f:m -U efuse:w:0xfe:m -U hfuse:w:0xd6:m -U lfuse:w:0x62:m`
    * flash bootloader: `avrdude -v -p atmega644p -c usbasp -P usb -U flash:w:optiboot_flash_atmega644p_9600_1000000L.hex:i -U lock:w:0x0f:m`
    * now should be able to use arduino bootloader at 9600 for uploading - yes it's a bit slow right now. (see note above about connecting RTS/DTR to RST for auto-reset.)
    * TODO: investigate stability of IntRC 8MHz@19200 bootloader
