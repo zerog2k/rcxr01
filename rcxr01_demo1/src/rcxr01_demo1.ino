@@ -25,7 +25,7 @@ uint8_t payload[32];
 #define USB_DETECT_PIN  2   // PB2
 uint8_t on_battery;
 #define BATT_LEVEL_HIGH 2500
-#define BATT_LEVEL_MED  2100
+#define BATT_LEVEL_MED  2200
 #define BATT_LEVEL_LOW  1900
 
 uint8_t i;
