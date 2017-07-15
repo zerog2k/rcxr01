@@ -51,11 +51,20 @@ This is not about reverse engineering the existing software, but rather reusing 
 ### flashing arduino bootloader
  * use something like usbasp, ftdi, etc. Cheap usbasp adapter worked fine for me. Something similar to [this adapter from Banggood](https://www.banggood.com/USBASP-USBISP-3_3-5V-AVR-Downloader-Programmer-With-ATMEGA8-ATMEGA128-p-934425.html?p=WX0407753399201409DA)
  * https://github.com/MCUdude/MightyCore/tree/master/avr/bootloaders/optiboot_flash/atmega644p
-  * use `optiboot_flash_atmega644p_9600_1000000L.hex` (tried running 8Mhz@38400, but uploading was not stable for me, at least on initial attempts.)
-   * set fuses: `avrdude -v -p atmega644p -c usbasp -P usb -e -U lock:w:0x3f:m -U efuse:w:0xfe:m -U hfuse:w:0xd6:m -U lfuse:w:0x62:m`
-   * flash bootloader: `avrdude -v -p atmega644p -c usbasp -P usb -U flash:w:optiboot_flash_atmega644p_9600_1000000L.hex:i -U lock:w:0x0f:m`
-   * now should be able to use arduino bootloader at 9600 for uploading - yes it's a bit slow right now. (see note above about connecting RTS/DTR to RST for auto-reset.)
-   * TODO: investigate stability of IntRC 8MHz@19200 bootloader
+ * choose a bootloader option:
+#### bootloader @ 1MHz
+  * safest option
+  * use `optiboot_flash_atmega644p_9600_1000000L.hex` 
+  * set fuses: `avrdude -v -p atmega644p -c usbasp -P usb -e -U lock:w:0x3f:m -U efuse:w:0xfe:m -U hfuse:w:0xd6:m -U lfuse:w:0x62:m`
+  * flash bootloader: `avrdude -v -p atmega644p -c usbasp -P usb -U flash:w:optiboot_flash_atmega644p_9600_1000000L.hex:i -U lock:w:0x0f:m`
+  * now should be able to use arduino bootloader at 9600 for uploading (see note above about connecting RTS/DTR to RST for auto-reset.)
+#### bootloader @ 8MHz
+  * experimental
+  * use `optiboot_flash_atmega644p_38400_8000000L.hex`
+  * set fuses: `avrdude -v -p atmega644p -c usbasp -P usb -e -U lock:w:0x3f:m -U efuse:w:0xfe:m -U hfuse:w:0xd6:m -U lfuse:w:0xe2:m` (unsets CKDIV8)
+  * flash bootloader: `avrdude -v -p atmega644p -c usbasp -P usb -U flash:w:optiboot_flash_atmega644p_38400_8000000L.hex:i -U lock:w:0x0f:m`
+  * should allow you to use 38400 upload speed. Note: adjust `upload_speed` in `platformio.ini`
+  * bootloader will run at 8MHz. This should be safe because with usb, vcc should always be above 2.7V. Application sketch should run at <=4MHz in order to run off of battery down to BOD voltage of 1.8V. Demo app here sets clock prescaler to 1MHz.
    
 ## building
  * using MightyCore board support for Arduino framework

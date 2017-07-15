@@ -32,6 +32,11 @@ uint8_t i;
 
 void setup()
 {
+  // change clock from 8 to 1MHz to ensure safe operating range down to
+  // brown-out battery voltage of 1.8V
+  CLKPR = _BV(CLKPCE); // Clock Prescaler Change Enable
+  CLKPR = _BV(CLKPS1) | _BV(CLKPS0); // Clock Prescaler = fosc/8
+
   delay(100);
 
   Serial.begin(9600);
