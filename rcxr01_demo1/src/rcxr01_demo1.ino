@@ -83,19 +83,22 @@ void setup()
   
 void loop()
 {
-  if ((seconds - last_keypress_time) > SLEEP_DELAY_TIME )
+  on_battery = digitalRead(USB_DETECT_PIN);
+  if ( mode != M_SLEEP && on_battery && 
+      ( seconds - last_keypress_time ) > SLEEP_DELAY_TIME)
   {
     mode = M_SLEEP;
+    customKeypad.setDebounceTime(1);
     u8x8.setPowerSave(1);
     radio.powerDown();
   }
-
-  uint8_t mykey = customKeypad.getKey();
-  if (mykey) {
+  uint8_t mykey;
+  if (mykey = customKeypad.getKey()) {
     last_keypress_time = seconds;
     if (mode == M_SLEEP) {
       u8x8.setPowerSave(0);
       radio.powerUp();
+      customKeypad.setDebounceTime(10);
       mode = M_WAKE;
       return;
     }
@@ -126,7 +129,6 @@ void loop()
     u8x8.print("t:");
     u8x8.print(seconds);
 
-    on_battery = digitalRead(USB_DETECT_PIN);
     u8x8.setCursor(0,2);
     u8x8.print("on_bat:");
     u8x8.print(on_battery);
