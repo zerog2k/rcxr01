@@ -10,12 +10,10 @@
 */
 
 // Watchdog Interrupt Service. This is executed when watchdog timed out.
-ISR(WDT_vect) {
-    _NOP();
-}
+EMPTY_INTERRUPT(WDT_vect);
 
 // Enters the arduino into sleep mode.
-void enterSleep(void)
+void do_sleep(void)
 {
   // There are five different sleep modes in order of power saving:
   // SLEEP_MODE_IDLE - the lowest power saving mode
@@ -75,7 +73,7 @@ void setupWatchDogTimer() {
   */
   // we are using 1MHz Internal RC Osc.
 
-  WDTCSR  = (0<<WDP3) | (0<<WDP2) | (1<<WDP1) | (1<<WDP0); 
+  WDTCSR  = (0<<WDP3) | (0<<WDP2) | (1<<WDP1) | (0<<WDP0); 
   
   // Enable the WD interrupt (note: no reset).
   WDTCSR |= _BV(WDIE);

@@ -8,7 +8,6 @@
 #include "RF24.h"
 #include "sleep.h"
 #include "rtc.h"
-#include "keypad.h"
 #include "serno.h"
 
 /// radio stuff
@@ -21,6 +20,17 @@ const uint8_t rxaddr[] = { 0xAD, 0xAC, 0xAB, 0xAA, 0x01 };
 uint8_t payload[32];
 #define MSG_TYPE_KEYPRESS 0xA1
 
+// display/sleep mode stuff
+uint32_t sleep_timer = 0;
+typedef enum {
+  M_SLEEP,
+  M_WAKEUP,
+  M_ACTIVE
+} display_modes;
+
+volatile uint8_t mode = M_ACTIVE;
+#define SLEEP_DELAY_TIME 8
+#include "keypad.h"
 
 /// usb voltage detection stuff
 #define USB_DETECT_PIN  2   // PB2
@@ -69,60 +79,92 @@ void setup()
   rtc_init();
   Serial.println("rtc_init done.");
   print_ser_num();
-  print_lot_code();  
+  print_lot_code();
   sei();
 }
   
 void loop()
 {
-  
-  uint8_t mykey = customKeypad.getKey();
-  if (mykey) {
-    // alternate yes/no between presses
-    if (i%2==0) {
-          lcd_set_yes();
-    } else {
-          lcd_set_no();
-    }
-    Serial.println(mykey);
-    u8x8.clearLine(1);
-    u8x8.setCursor(0,1);
-    u8x8.print("k:");
-    u8x8.print(mykey);
-    payload[0] = MSG_TYPE_KEYPRESS;
-    payload[1] = mykey;
-    radio.stopListening();
-    radio.write(payload, 2);
-    lcd_animate_sig(6);
-    i++;
+  if (mode == M_WAKEUP)
+  {
+    // transition from WAKE to ACTIVE
+    keypad_exit_sleep();
+    sleep_timer = seconds;
+    u8x8.setPowerSave(0);
+    radio.powerUp();
+    mode = M_ACTIVE;
+    delay(10);
     return;
   }
 
-  u8x8.setCursor(5,1);
-  u8x8.print("t:");
-  u8x8.print(seconds);
-
   on_battery = digitalRead(USB_DETECT_PIN);
-  u8x8.setCursor(0,2);
-  u8x8.print("on_bat:");
-  u8x8.print(on_battery);
-
-  uint16_t batt_mv = readVcc();
-  u8x8.setCursor(0,3);
-  u8x8.print("v:");
-  u8x8.print(batt_mv);
-  lcd_set_bat_shell(BAT_SHELL_ON); 
-  if (batt_mv > BATT_LEVEL_HIGH)
-    lcd_set_bat(3);
-  else if (batt_mv > BATT_LEVEL_MED)
-    lcd_set_bat(2);
-  else if (batt_mv > BATT_LEVEL_LOW)
-    lcd_set_bat(1);
-  else
+  if (! on_battery)
   {
-    lcd_set_bat(0);
-    lcd_set_bat_shell(BAT_SHELL_BLINK_SLOW);
+    // on usb power, reset sleep timer or wake
+    sleep_timer = seconds;
+    if (mode == M_SLEEP)
+      mode = M_WAKEUP;
   }
 
-  enterSleep(); // wake on wdt and rtc interrupts
+  if ( mode == M_ACTIVE && 
+      ( seconds - sleep_timer ) > SLEEP_DELAY_TIME)
+  {
+    // transition from ACTIVE to SLEEP
+    mode = M_SLEEP;
+    u8x8.setPowerSave(1);
+    radio.powerDown();
+    keypad_enter_sleep();  
+  }
+
+  if (mode == M_ACTIVE)
+  {
+    uint8_t mykey = customKeypad.getKey();
+    if (mykey) {
+      sleep_timer = seconds;
+      // alternate yes/no between presses
+      if (i%2==0) {
+            lcd_set_yes();
+      } else {
+            lcd_set_no();
+      }
+      Serial.println(mykey);
+      //u8x8.clearLine(1);
+      u8x8.setCursor(0,1);
+      u8x8.print("k:   ");
+      u8x8.setCursor(2,1);
+      u8x8.print(mykey);
+      payload[0] = MSG_TYPE_KEYPRESS;
+      payload[1] = mykey;
+      radio.stopListening();
+      radio.write(payload, 2);
+      lcd_animate_sig(6);
+      i++;
+    }
+    u8x8.setCursor(5,1);
+    u8x8.print("t:");
+    u8x8.print(seconds);
+
+    u8x8.setCursor(0,2);
+    u8x8.print("on_bat:");
+    u8x8.print(on_battery);
+
+    uint16_t batt_mv = readVcc();
+    u8x8.setCursor(0,3);
+    u8x8.print("v:");
+    u8x8.print(batt_mv);
+    lcd_set_bat_shell(BAT_SHELL_ON); 
+    if (batt_mv > BATT_LEVEL_HIGH)
+      lcd_set_bat(3);
+    else if (batt_mv > BATT_LEVEL_MED)
+      lcd_set_bat(2);
+    else if (batt_mv > BATT_LEVEL_LOW)
+      lcd_set_bat(1);
+    else
+    {
+      lcd_set_bat(0);
+      lcd_set_bat_shell(BAT_SHELL_BLINK_SLOW);
+    }
+  }
+
+  do_sleep(); // wake on wdt and rtc interrupts
 }
