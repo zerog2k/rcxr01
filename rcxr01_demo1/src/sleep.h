@@ -75,7 +75,7 @@ void setupWatchDogTimer() {
   */
   // we are using 1MHz Internal RC Osc.
 
-  WDTCSR  = (0<<WDP3) | (0<<WDP2) | (1<<WDP1) | (1<<WDP0); 
+  WDTCSR  = (0<<WDP3) | (0<<WDP2) | (1<<WDP1) | (0<<WDP0); 
   
   // Enable the WD interrupt (note: no reset).
   WDTCSR |= _BV(WDIE);

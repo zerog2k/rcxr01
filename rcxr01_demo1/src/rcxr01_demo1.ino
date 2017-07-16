@@ -21,6 +21,14 @@ const uint8_t rxaddr[] = { 0xAD, 0xAC, 0xAB, 0xAA, 0x01 };
 uint8_t payload[32];
 #define MSG_TYPE_KEYPRESS 0xA1
 
+uint32_t last_keypress_time = 0;
+enum {
+  M_SLEEP,
+  M_WAKE
+} display_mode;
+
+uint8_t mode = M_WAKE;
+#define SLEEP_DELAY_TIME 10
 
 /// usb voltage detection stuff
 #define USB_DETECT_PIN  2   // PB2
@@ -75,9 +83,22 @@ void setup()
   
 void loop()
 {
-  
+  if ((seconds - last_keypress_time) > SLEEP_DELAY_TIME )
+  {
+    mode = M_SLEEP;
+    u8x8.setPowerSave(1);
+    radio.powerDown();
+  }
+
   uint8_t mykey = customKeypad.getKey();
   if (mykey) {
+    last_keypress_time = seconds;
+    if (mode == M_SLEEP) {
+      u8x8.setPowerSave(0);
+      radio.powerUp();
+      mode = M_WAKE;
+      return;
+    }
     // alternate yes/no between presses
     if (i%2==0) {
           lcd_set_yes();
@@ -85,9 +106,10 @@ void loop()
           lcd_set_no();
     }
     Serial.println(mykey);
-    u8x8.clearLine(1);
+    //u8x8.clearLine(1);
     u8x8.setCursor(0,1);
-    u8x8.print("k:");
+    u8x8.print("k:   ");
+    u8x8.setCursor(2,1);
     u8x8.print(mykey);
     payload[0] = MSG_TYPE_KEYPRESS;
     payload[1] = mykey;
@@ -98,30 +120,33 @@ void loop()
     return;
   }
 
-  u8x8.setCursor(5,1);
-  u8x8.print("t:");
-  u8x8.print(seconds);
-
-  on_battery = digitalRead(USB_DETECT_PIN);
-  u8x8.setCursor(0,2);
-  u8x8.print("on_bat:");
-  u8x8.print(on_battery);
-
-  uint16_t batt_mv = readVcc();
-  u8x8.setCursor(0,3);
-  u8x8.print("v:");
-  u8x8.print(batt_mv);
-  lcd_set_bat_shell(BAT_SHELL_ON); 
-  if (batt_mv > BATT_LEVEL_HIGH)
-    lcd_set_bat(3);
-  else if (batt_mv > BATT_LEVEL_MED)
-    lcd_set_bat(2);
-  else if (batt_mv > BATT_LEVEL_LOW)
-    lcd_set_bat(1);
-  else
+  if (mode == M_WAKE)
   {
-    lcd_set_bat(0);
-    lcd_set_bat_shell(BAT_SHELL_BLINK_SLOW);
+    u8x8.setCursor(5,1);
+    u8x8.print("t:");
+    u8x8.print(seconds);
+
+    on_battery = digitalRead(USB_DETECT_PIN);
+    u8x8.setCursor(0,2);
+    u8x8.print("on_bat:");
+    u8x8.print(on_battery);
+
+    uint16_t batt_mv = readVcc();
+    u8x8.setCursor(0,3);
+    u8x8.print("v:");
+    u8x8.print(batt_mv);
+    lcd_set_bat_shell(BAT_SHELL_ON); 
+    if (batt_mv > BATT_LEVEL_HIGH)
+      lcd_set_bat(3);
+    else if (batt_mv > BATT_LEVEL_MED)
+      lcd_set_bat(2);
+    else if (batt_mv > BATT_LEVEL_LOW)
+      lcd_set_bat(1);
+    else
+    {
+      lcd_set_bat(0);
+      lcd_set_bat_shell(BAT_SHELL_BLINK_SLOW);
+    }
   }
 
   enterSleep(); // wake on wdt and rtc interrupts
