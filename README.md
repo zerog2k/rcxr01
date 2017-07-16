@@ -6,6 +6,8 @@ The RCXR-01 seems to be quite handy as a portable NRF24 platform (i.e. handheld 
 
 This is not about reverse engineering the existing software, but rather reusing the hardware completely. You get a nice lcd, matrix keypad, NRF24 radio, usb-uart, and mcu with plenty of flash that can run Arduino (or pure AVR C if that's your thing ;).
 
+(Note that the RCXR-02/03 is completely different insides - based on MSP430F5528)
+
 <img src="docs/rcxr_01_demo.jpg" width="400">
 
 ## hardware
