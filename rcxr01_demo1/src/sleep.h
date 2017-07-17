@@ -12,6 +12,25 @@
 // Watchdog Interrupt Service. This is executed when watchdog timed out.
 EMPTY_INTERRUPT(WDT_vect);
 
+void enable_prr() 
+{ 
+    power_spi_disable(); 
+    power_timer0_disable(); 
+    power_timer1_disable(); 
+    power_twi_disable();
+    power_adc_disable();
+    power_usart1_disable();
+    power_usart0_disable();
+}
+
+void disable_prr() 
+{ 
+    power_spi_enable(); 
+    power_timer0_enable(); 
+    power_adc_enable();
+    power_usart0_enable();
+}
+
 // Enters the arduino into sleep mode.
 void do_sleep(void)
 {
@@ -21,16 +40,17 @@ void do_sleep(void)
   // SLEEP_MODE_PWR_SAVE
   // SLEEP_MODE_STANDBY
   // SLEEP_MODE_PWR_DOWN - the highest power saving mode
-  //set_sleep_mode(SLEEP_MODE_EXT_STANDBY);
-  set_sleep_mode(SLEEP_MODE_EXT_STANDBY);
+  set_sleep_mode(SLEEP_MODE_PWR_SAVE);
 
+  enable_prr();
+  sleep_bod_disable();
   // Now enter sleep mode.
   sleep_mode();
 
   // The program will continue from here after the WDT timeout
-
   // Re-enable the peripherals.
-  power_all_enable();
+  disable_prr();
+  //power_all_enable();
 }
 
 
@@ -72,9 +92,8 @@ void setupWatchDogTimer() {
    *  1    0    0    1    | 1024K cycles  | 8.0 s
   */
   // we are using 1MHz Internal RC Osc.
-
-  WDTCSR  = (0<<WDP3) | (0<<WDP2) | (1<<WDP1) | (0<<WDP0); 
   
+  WDTCSR = WDTO_120MS;
   // Enable the WD interrupt (note: no reset).
   WDTCSR |= _BV(WDIE);
 }
