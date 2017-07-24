@@ -45,9 +45,8 @@ void setup()
 {
   // change clock from 8 to 1MHz to ensure safe operating range down to
   // brown-out battery voltage of 1.8V
-  CLKPR = _BV(CLKPCE); // Clock Prescaler Change Enable
-  CLKPR = _BV(CLKPS1) | _BV(CLKPS0); // Clock Prescaler = fosc/8
-
+  clock_prescale_set(clock_div_8);
+  
   delay(100);
 
   Serial.begin(9600);
@@ -80,6 +79,7 @@ void setup()
   Serial.println("rtc_init done.");
   print_ser_num();
   print_lot_code();
+  keypad_enter_sleep();
   sei();
 }
   
@@ -113,7 +113,15 @@ void loop()
     mode = M_SLEEP;
     u8x8.setPowerSave(1);
     radio.powerDown();
-    keypad_enter_sleep();  
+    keypad_enter_sleep();
+
+    //testing
+    /*
+    pinMode(RF_CSN, INPUT);
+    pinMode(CS, INPUT);
+    pinMode(RST, INPUT);
+    pinMode(RS, INPUT);
+    */
   }
 
   if (mode == M_ACTIVE)

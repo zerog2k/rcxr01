@@ -35,7 +35,6 @@ void keypad_enter_sleep()
 
   // set rows as pulled up inputs
   DDRA &= ~(_BV(PA1) | _BV(PA3) | _BV(PA4) | _BV(PA6) | _BV(PA7));
-  PORTA |= _BV(PA1) | _BV(PA3) | _BV(PA4) | _BV(PA6) | _BV(PA7);
   // set pc int on rows
   PCMSK0 |= _BV(PCINT1) | _BV(PCINT3) | _BV(PCINT4) | _BV(PCINT6) | _BV(PCINT7);
   PCIFR  |= _BV (PCIF0);
