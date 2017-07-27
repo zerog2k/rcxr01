@@ -16,7 +16,7 @@ This is not about reverse engineering the existing software, but rather reusing 
   * internal RC 1MHz clock (CKDIV8 fuse set)
   * 32khz crystal on TOSC1/2 
     * timer2 can be setup as rtc
-    * may be missing some loading caps? In some experiments, I'm having a tough time getting the crystal to start. I used 6pF caps, and I think that helped. But also doing some experiments where just grounding the crystal can it seems to help it start up (without needing extra load caps).
+    * ~~may be missing some loading caps? In some experiments, I'm having a tough time getting the crystal to start. I used 6pF caps, and I think that helped. But also doing some experiments where just grounding the crystal can it seems to help it start up (without needing extra load caps).~~
 * NRF24L01 radio
   * on hardware spi bus (SCK/MISO/MOSI)
   * CE -> PB0, CSN -> PC1
@@ -33,7 +33,7 @@ This is not about reverse engineering the existing software, but rather reusing 
 * testpoint pads under battery compartment (from left to right)
   * MOSI, RST, SCK, MISO, GND, VDD3v3, SS, TCK, TMS, TDO, TDI
 * LCD panel
-  * 128x32 matrix plus several custom symbols, possibly [ST7565 chipset](https://edeca.net/pages/the-st7565-display-controller/).  
+  * 96x32 matrix plus several custom symbols, possibly [ST7565 chipset](https://edeca.net/pages/the-st7565-display-controller/).  
   * U8x8 lib customized: U8X8_ST7565_RCXR01_4W_HW_SPI
   * mcu connectivity: SPI for SCLK & SI. CS -> PD5, RST -> PD6, RS(A0) -> PB3
 
@@ -55,18 +55,17 @@ This is not about reverse engineering the existing software, but rather reusing 
  * https://github.com/MCUdude/MightyCore/tree/master/avr/bootloaders/optiboot_flash/atmega644p
  * choose a bootloader option:
 #### bootloader @ 1MHz
-  * safest option
+  * slower option (recommend instead 8MHz@38400)
   * use `optiboot_flash_atmega644p_9600_1000000L.hex` 
   * set fuses: `avrdude -v -p atmega644p -c usbasp -P usb -e -U lock:w:0x3f:m -U efuse:w:0xfe:m -U hfuse:w:0xd6:m -U lfuse:w:0x62:m`
   * flash bootloader: `avrdude -v -p atmega644p -c usbasp -P usb -U flash:w:optiboot_flash_atmega644p_9600_1000000L.hex:i -U lock:w:0x0f:m`
   * now should be able to use arduino bootloader at 9600 for uploading (see note above about connecting RTS/DTR to RST for auto-reset.)
 #### bootloader @ 8MHz
-  * experimental
   * use `optiboot_flash_atmega644p_38400_8000000L.hex`
   * set fuses: `avrdude -v -p atmega644p -c usbasp -P usb -e -U lock:w:0x3f:m -U efuse:w:0xfe:m -U hfuse:w:0xd6:m -U lfuse:w:0xe2:m` (unsets CKDIV8)
   * flash bootloader: `avrdude -v -p atmega644p -c usbasp -P usb -U flash:w:optiboot_flash_atmega644p_38400_8000000L.hex:i -U lock:w:0x0f:m`
   * should allow you to use 38400 upload speed. Note: adjust `upload_speed` in `platformio.ini`
-  * bootloader will run at 8MHz. This should be safe because with usb, vcc should always be above 2.7V. Application sketch should run at <=4MHz in order to run off of battery down to BOD voltage of 1.8V. Demo app here sets clock prescaler to 1MHz.
+  * bootloader will run at 8MHz. This should be safe because with usb, vcc should always be above 2.7V. Application sketch should run at <=4MHz in order to run off of battery down to BOD voltage of 1.8V. Demo app here sets clock prescaler down to 1MHz.
    
 ## building
  * using MightyCore board support for Arduino framework
