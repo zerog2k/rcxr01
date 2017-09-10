@@ -30,7 +30,7 @@ typedef enum {
 
 volatile uint8_t mode = M_ACTIVE;
 #define SLEEP_DELAY_TIME 8
-#include "keypad.h"
+#include "custom_keypad.h"
 
 /// usb voltage detection stuff
 #define USB_DETECT_PIN  2   // PB2
