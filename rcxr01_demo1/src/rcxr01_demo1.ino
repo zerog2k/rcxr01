@@ -10,14 +10,18 @@
 #include "rtc.h"
 #include "serno.h"
 
-/// radio stuff
+/// radio stuffmio
 #define   RF_CE   0  //PB0
 #define   RF_CSN  17 //PC1
 
 RF24 radio(RF_CE, RF_CSN);
-const uint8_t txaddr[] = { 0xAD, 0xAC, 0xAB, 0xAA, 0x00 };
+//const uint8_t txaddr[] = { 0xAD, 0xAC, 0xAB, 0xAA, 0x00 };
+const uint8_t txaddr[] = { 0xe7, 0xe7, 0xe7, 0xe7, 0xe7 };
+//const uint64_t txaddr = 0xe7e7e7e7e7;
 const uint8_t rxaddr[] = { 0xAD, 0xAC, 0xAB, 0xAA, 0x01 };
-uint8_t payload[32];
+uint8_t payload[8];
+// = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 
+//                      16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 27, 29, 30, 31};
 #define MSG_TYPE_KEYPRESS 0xA1
 
 // display/sleep mode stuff
@@ -65,8 +69,12 @@ void setup()
   radio.begin();
   radio.openWritingPipe(txaddr);
   radio.openReadingPipe(1, rxaddr);
-  //radio.enableDynamicPayloads();
+  //radio.enableDynamicPayloads(); // esb
   radio.setAutoAck(true);
+  radio.setChannel(2);
+  //radio.disableCRC();
+  radio.setPALevel(RF24_PA_HIGH);
+  radio.setDataRate(RF24_1MBPS);
   printf_begin();
   Serial.println("starting...");
   radio.printDetails();
@@ -144,7 +152,13 @@ void loop()
       payload[0] = MSG_TYPE_KEYPRESS;
       payload[1] = mykey;
       radio.stopListening();
-      radio.write(payload, 2);
+      uint8_t i;
+      //for (i=0; i<32; i++)
+      //{
+        radio.write(payload, 6);
+        delay(1);
+      //}
+        
       lcd_animate_sig(6);
       i++;
     }
